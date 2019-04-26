@@ -10,7 +10,7 @@ Plug 'scrooloose/syntastic'
 Plug 'vim-scripts/taglist.vim'
 Plug 'brookhong/cscope.vim'
 Plug 'mbbill/echofunc'
-" Plug 'Valloric/YouCompleteMe'
+Plug 'Valloric/YouCompleteMe'
 call plug#end()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
