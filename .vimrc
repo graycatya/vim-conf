@@ -1,5 +1,10 @@
+"set encoding=utf-8
 
-set encoding=utf-8
+set pyxversion=3
+
+" set nocompatible
+
+let g:python3_host_prog="/usr/bin/python3.6"
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 call plug#begin('~/.vim/plugged')
@@ -10,21 +15,28 @@ Plug 'scrooloose/syntastic'
 Plug 'vim-scripts/taglist.vim'
 Plug 'brookhong/cscope.vim'
 Plug 'mbbill/echofunc'
-Plug 'Valloric/YouCompleteMe'
+if has('nvim')
+	Plug 'Shougo/deoplete.nvim', {'do': ':UpdateRemotePlugins'}
+else
+	Plug 'Shougo/deoplete.nvim'
+	Plug 'roxma/nvim-yarp'
+	Plug 'roxma/vim-hug-neovim-rpc'
+endif
+Plug 'Shougo/deoplete-clangx'
+Plug 'Shougo/neoinclude.vim'
+Plug 'altercation/vim-colors-solarized'
+Plug 'octol/vim-cpp-enhanced-highlight'
+"Plug 'Valloric/YouCompleteMe'
 call plug#end()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+let g:deoplete#enable_at_startup=1
+" Change clang binary path
+call deoplete#custom#var('clangx', 'clang_binary', '/usr/bin/clang')
 
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"获取当前文件名
-" function GetFileName()
-"	return bufname(winbufnr(winnr()))  "获取当前窗口缓冲区的名字
-"endfunction
-
-"获取当前时间，精确到分
-" function GetDateTime()
-"    return strftime("%Y-%m-%d %H:%M")
-" endfunction
+" Change clang options
+call deoplete#custom#var('clangx', 'default_c_options', '')
+call deoplete#custom#var('clangx', 'default_cpp_options', '')
 
 
 "设置当文件被改动时自动载入"
@@ -53,37 +65,20 @@ set ruler
 set number
 set nu
 
-"YouCompleteMe
-let g:ycm_global_ycm_extra_conf='/home/cat/.vim/bundle/YouCompleteMe/third_party/ycmd/cpp/ycm/.ycm_extra_conf.py'
-"让YouCompleteMe同时利用原来的ctags
-let g:ycm_collect_identifiers_from_tag_files = 1 
-" 设置触发标识符补全的最小字符数，设置为99或更大的数字，则等效于关闭标识符补全功能，但保留语义补全功能
-let g:ycm_min_num_of_chars_for_completion = 2
+set cursorcolumn
+set cursorline
 
-" let g:ycm_key_invoke_completion = '<F3>'
+"autocmd InsertLeave * se cul  " 用浅色高亮当前行
+hi CursorLine   cterm=NONE ctermbg=gray ctermfg=brown
+hi CursorColumn cterm=NONE ctermbg=gray ctermfg=brown
 
-let g:ycm_complete_in_strings = 1
-
-"设置语法颜色"
-"
-"colorscheme elflordi
 colorscheme desert
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-" 文件注释
-
-
 
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
+let Tlist_Ctags_Cmd='/usr/bin/ctags'
 
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
-"set c/c++ include
-set path=/usr/include,/usr/local/include 
-
-"""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
+""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
 
 
 " cscope配置"""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -102,17 +97,6 @@ if has("cscope")
 	endif
 set csverb
 endif
-
-" nmap <C-q>s :cs find s <C-R>=expand("<cword>")<CR><CR>
-" nmap <C-w>g :cs find g <C-R>=expand("<cword>")<CR><CR>
-" nmap <C-e>c :cs find c <C-R>=expand("<cword>")<CR><CR>
-" nmap <C-r>t :cs find t <C-R>=expand("<cword>")<CR><CR>
-" nmap <C-t>e :cs find e <C-R>=expand("<cword>")<CR><CR>
-" nmap <C-y>f :cs find f <C-R>=expand("<cfile>")<CR><CR>
-" nmap <C-u>i :cs find i <C-R>=expand("<cfile>")<CR><CR>
-" nmap <C-i>d :cs find d <C-R>=expand("<cword>")<CR><CR>
-"
-
 "解决ctrl+]只跳转到第一个关键词问题
 nnoremap <C-]> :ts <C-R>=expand("<cword>")<CR><CR>
 vnoremap <C-]> :ts <C-R>=expand("<cword>")<CR><CR>
@@ -172,14 +156,14 @@ let g:NERDTreeNodeDelimiter = 'x'
 ""taglist窗口显示在右侧，缺省为左侧     
 let Tlist_Use_Right_Window=1    
 "设置ctags路径"将taglist与ctags关联     
-"let Tlist_Ctags_Cmd = '/usr/bin/ctags'     
+let Tlist_Ctags_Cmd = '/usr/bin/ctags'     
 ""启动vim后自动打开taglist窗口     
 let Tlist_Auto_Open = 1     
 "不同时显示多个文件的tag，只显示当前文件的     
 ""不同时显示多个文件的tag，仅显示一个     
 let Tlist_Show_One_File = 1     
 "taglist为最后一个窗口时，退出vim     
-"let Tlist_Exit_OnlyWindow = 1     
+let Tlist_Exit_OnlyWindow = 1     
 ""let Tlist_Use_Right_Window =1     
 "设置taglist窗口大小     
 ""let Tlist_WinHeight = 100     
@@ -207,8 +191,33 @@ endfunction
 nmap <F4> :call UpdateCtags()<CR>
 					
 ""<-taglist========================================= 
-				
-				
+
+
+"syntastic
+""设置error和warning的标志
+let g:syntastic_enable_signs = 1
+let g:syntastic_error_symbol='✗'
+let g:syntastic_warning_symbol='►'
+"总是打开Location
+"List（相当于QuickFix）窗口，如果你发现syntastic因为与其他插件冲突而经常崩溃，将下面选项置0
+"let g:syntastic_always_populate_loc_list = 1
+""自动打开Locaton
+" List，默认值为2，表示发现错误时不自动打开，当修正以后没有再发现错误时自动关闭，置1表示自动打开自动关闭，0表示关闭自动打开和自动关闭，3表示自动打开，但不自动关闭
+let g:syntastic_auto_loc_list = 1
+"修改Locaton List窗口高度
+"let g:syntastic_loc_list_height = 5
+""打开文件时自动进行检查
+let g:syntastic_check_on_open = 1
+"自动跳转到发现的第一个错误或警告处
+"let g:syntastic_auto_jump = 1
+""进行实时检查，如果觉得卡顿，将下面的选项置为1
+let g:syntastic_check_on_wq = 0
+"高亮错误
+"let g:syntastic_enable_highlighting=1
+""让syntastic支持C++11
+let g:syntastic_cpp_compiler = 'clang++'
+let g:syntastic_cpp_compiler_options = ' -std=c++11 -stdlib=libc++'
+
 map <F5> :call CompileRunGcc()<CR>
 func! CompileRunGcc()
     exec "w"
