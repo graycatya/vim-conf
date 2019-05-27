@@ -19,6 +19,7 @@ cp plugin/NERD_tree.vim ~/.vim/plugin/
 cp doc/NERD_tree.txt ~/.vim/doc/
 echo "nerdtree ok......"
 
+:<<!
 echo "配置: YouCompleteMe......"
 sudo apt install cmake 
 mkdir ~/.vim/bundle/
@@ -29,6 +30,7 @@ git submodule update --init --recursive
 ./install.sh --clang-completer
 cd $curdir
 echo "YouCOmpleteMe ok......."
+!
 
 echo "配置: vim-plug......"
 curl -fLo ~/.vim/autoload/plug.vim --create-dirs https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
@@ -42,7 +44,6 @@ echo "syntastic ok."
 echo "install cscope exuberant-ctags...."
 sudo apt install cscope
 sudo apt-get install exuberant-ctags
-
+sudo apt-get install clang 
 echo "ok......"
-
 
