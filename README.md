@@ -12,3 +12,6 @@ vim
 命令模式
 
 :PlugInstall
+
+
+pip3 install --user pynvim
