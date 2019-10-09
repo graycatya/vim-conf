@@ -4,6 +4,7 @@ echo $curdir
 echo "配置: snipMate......"
 unzip -o -d ~/.vim/ snipMate.zip 
 echo "snipMate ok."
+sudo apt install curl
 
 echo "配置： .vimrc....."
 cp ./.vimrc ~/
