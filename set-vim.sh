@@ -42,6 +42,12 @@ echo "配置： syntastic......"
 git clone https://github.com/scrooloose/syntastic.git ~/.vim/bundle/ 
 echo "syntastic ok."
 
+echo "配置: pydiction......"
+mkdir -p ~/.vim/tools/pydiction
+cp -r pydiction/after ~/.vim
+cp pydiction/complete-dict ~/.vim/tools/pydiction
+echo "pydiction ok."
+
 echo "install cscope exuberant-ctags...."
 sudo apt install cscope
 sudo apt-get install exuberant-ctags
