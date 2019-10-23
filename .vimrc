@@ -26,6 +26,7 @@ Plug 'Shougo/deoplete-clangx'
 Plug 'Shougo/neoinclude.vim'
 Plug 'altercation/vim-colors-solarized'
 Plug 'octol/vim-cpp-enhanced-highlight'
+
 "Plug 'Valloric/YouCompleteMe'
 call plug#end()
 """""""""""""""""""""""""""""""""""""""""""""""""""""""""""""""
@@ -38,6 +39,8 @@ call deoplete#custom#var('clangx', 'clang_binary', '/usr/bin/clang')
 call deoplete#custom#var('clangx', 'default_c_options', '')
 call deoplete#custom#var('clangx', 'default_cpp_options', '')
 
+filetype plugin on
+let g:pydiction_location = '~/.vim/tools/pydiction/complete-dict'
 
 "设置当文件被改动时自动载入"
 set autoread
@@ -203,7 +206,7 @@ let g:syntastic_warning_symbol='►'
 "let g:syntastic_always_populate_loc_list = 1
 ""自动打开Locaton
 " List，默认值为2，表示发现错误时不自动打开，当修正以后没有再发现错误时自动关闭，置1表示自动打开自动关闭，0表示关闭自动打开和自动关闭，3表示自动打开，但不自动关闭
-let g:syntastic_auto_loc_list = 1
+"let g:syntastic_auto_loc_list = 1
 "修改Locaton List窗口高度
 "let g:syntastic_loc_list_height = 5
 ""打开文件时自动进行检查
